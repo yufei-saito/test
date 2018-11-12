@@ -1,0 +1,58 @@
+package yufei.crm.web.action;
+
+
+
+import org.hibernate.criterion.DetachedCriteria;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.util.ValueStack;
+
+import yufei.crm.domain.Customer;
+import yufei.crm.domain.Page;
+import yufei.crm.service.CustomerService;
+
+public class CustomerAction extends ActionSupport implements ModelDriven<Customer> {
+	private Customer c = new Customer();
+	private CustomerService cs ;
+	private Integer pageNum = 1;
+	private Integer everyNum = 3;
+	
+	public void setPageNum(Integer pageNum) {
+		if(pageNum!=null) {
+			this.pageNum = pageNum;
+		}
+	}
+	public void setEveryNum(Integer everyNum) {
+		if(everyNum!=null) {
+			this.everyNum = everyNum;
+		}
+	}
+	public void setCs(CustomerService cs) {
+		this.cs = cs;
+	}
+	@Override
+	public Customer getModel() {
+		return c;
+	}
+	
+	public String saveUI() {
+		
+		return "saveUI";
+	}
+	
+	
+	public String save() {
+		cs.save(c);
+		return SUCCESS;
+	}
+	
+	public String findByPage() {
+		DetachedCriteria dc = DetachedCriteria.forClass(Customer.class);
+		Page<Customer> p =cs.findByPage(dc,pageNum,everyNum);
+		ValueStack vs = ActionContext.getContext().getValueStack();
+		vs.push(p);
+		return "list";
+	}
+}

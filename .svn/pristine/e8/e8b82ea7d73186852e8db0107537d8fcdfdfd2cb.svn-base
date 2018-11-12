@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/crm"></property>
+		<property name="user" value="root"></property>
+		<property name="password" value="root"></property>
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="show_sql">true</prop>
+				<prop key="dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="format_sql">true</prop>
+				<prop key="hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>yufei/crm/domain/user.hbm.xml</value>
+				<value>yufei/crm/domain/customer.hbm.xml</value>
+				<value>yufei/crm/domain/baseDict.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- user相关的配置 -->
+	<bean id="userDao" class="yufei.crm.dao.impl.UserDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="userService" class="yufei.crm.service.impl.UserServiceImpl">
+		<property name="dao" ref="userDao"></property>
+	</bean>
+	<bean id="userAction" class="yufei.crm.web.action.UserAction" scope="prototype">
+		<property name="us" ref="userService"></property>
+	</bean>
+	
+	<!-- customer相关的配置 -->
+	<bean id="customerDao" class="yufei.crm.dao.impl.CustomerDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="customerService" class="yufei.crm.service.impl.CustomerServiceImpl">
+		<property name="dao" ref="customerDao"></property>
+	</bean>
+	<bean id="customerAction" class="yufei.crm.web.action.CustomerAction" scope="prototype">
+		<property name="cs" ref="customerService"></property>
+	</bean>
+	
+	<!-- baseDict相关的配置 -->
+	<bean id="baseDictDao" class="yufei.crm.dao.impl.BaseDictDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="baseDictService" class="yufei.crm.service.impl.BaseDictServiceImpl">
+		<property name="dao" ref="baseDictDao"></property>
+	</bean>
+	<bean id="baseDictAction" class="yufei.crm.web.action.BaseDictAction" scope="prototype">
+		<property name="bs" ref="baseDictService"></property>
+	</bean>
+	
+	<!-- 事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+</beans>

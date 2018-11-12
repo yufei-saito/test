@@ -1,0 +1,57 @@
+package yufei.crm.web.action;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.hql.spi.id.local.LocalTemporaryTableBulkIdStrategy;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.util.ValueStack;
+
+import yufei.crm.domain.LinkMan;
+import yufei.crm.domain.Page;
+import yufei.crm.service.LinkManService;
+
+public class LinkManAction extends ActionSupport implements ModelDriven<LinkMan>{
+	private LinkMan lk = new LinkMan();
+	private LinkManService ls;
+	private Integer pageNum =1;
+	private Integer everyNum =3;
+	
+	
+	public void setPageNum(Integer pageNum) {
+		if(pageNum!=null) {
+		this.pageNum = pageNum;
+		}
+	}
+
+	public void setEveryNum(Integer everyNum) {
+		if(everyNum!=null) {
+		this.everyNum = everyNum;
+		}
+	}
+
+	public void setLs(LinkManService ls) {
+		this.ls = ls;
+	}
+
+	@Override
+	public LinkMan getModel() {
+		return lk;
+	}
+	
+	
+	public String saveUI() {
+		
+		return "saveUI";
+	}
+	
+	public String findByPage() {
+		DetachedCriteria dc = DetachedCriteria.forClass(LinkMan.class);
+		Page<LinkMan> p = ls.findByPage(dc,pageNum,everyNum);
+		ValueStack vs = ActionContext.getContext().getValueStack();
+		vs.push(p);
+		
+		return "list";
+	}
+}

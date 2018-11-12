@@ -1,0 +1,14 @@
+package yufei.crm.service;
+
+import org.hibernate.criterion.DetachedCriteria;
+
+import yufei.crm.domain.Customer;
+import yufei.crm.domain.Page;
+
+public interface CustomerService {
+
+	void save(Customer c);
+
+	Page<Customer> findByPage(DetachedCriteria dc, Integer pageNum, Integer everyNum);
+
+}

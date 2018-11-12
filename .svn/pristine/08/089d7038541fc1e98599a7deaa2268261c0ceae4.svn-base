@@ -1,0 +1,12 @@
+package yufei.crm.service;
+
+import org.hibernate.criterion.DetachedCriteria;
+
+import yufei.crm.domain.LinkMan;
+import yufei.crm.domain.Page;
+
+public interface LinkManService {
+
+	Page<LinkMan> findByPage(DetachedCriteria dc, Integer pageNum, Integer everyNum);
+
+}

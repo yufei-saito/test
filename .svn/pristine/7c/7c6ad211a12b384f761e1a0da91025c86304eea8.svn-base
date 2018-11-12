@@ -1,0 +1,32 @@
+package yufei.crm.dao.impl;
+
+import java.util.List;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
+
+import yufei.crm.dao.LinkManDao;
+import yufei.crm.domain.LinkMan;
+
+public class LinkManDaoImpl extends HibernateDaoSupport implements LinkManDao {
+
+	@Override
+	public Integer findTotalCount(DetachedCriteria dc) {
+		dc.setProjection(Projections.rowCount());
+		List<Long> list = (List<Long>) this.getHibernateTemplate().findByCriteria(dc);
+		if(list.size()>0) {
+			return list.get(0).intValue();
+		}
+		return null;
+	}
+
+	@Override
+	public List<LinkMan> findByPage(DetachedCriteria dc, Integer pageNum, Integer everyNum) {
+		dc.setProjection(null);
+		List<LinkMan> list = (List<LinkMan>) this.getHibernateTemplate().findByCriteria(dc, (pageNum-1)*everyNum, everyNum);
+		
+		return list;
+	}
+
+}

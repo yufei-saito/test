@@ -1,0 +1,23 @@
+package yufei.crm.dao;
+
+import java.util.List;
+
+import org.hibernate.criterion.DetachedCriteria;
+
+import yufei.crm.domain.Customer;
+
+public interface CustomerDao {
+
+	void save(Customer c);
+
+	Integer findTotalCount(DetachedCriteria dc);
+
+	List<Customer> findByPage(DetachedCriteria dc, Integer pageNum, Integer everyNum);
+
+	Customer getById(Long cust_id);
+
+	void delete(Customer customer);
+
+	void update(Customer c);
+
+}

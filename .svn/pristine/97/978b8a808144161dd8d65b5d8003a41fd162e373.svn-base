@@ -1,0 +1,15 @@
+package yufei.crm.dao;
+
+import java.util.List;
+
+import org.hibernate.criterion.DetachedCriteria;
+
+import yufei.crm.domain.LinkMan;
+
+public interface LinkManDao {
+
+	Integer findTotalCount(DetachedCriteria dc);
+
+	List<LinkMan> findByPage(DetachedCriteria dc, Integer pageNum, Integer everyNum);
+
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<constant name="struts.objectFactory" value="spring"></constant>
+	<package name="crm" extends="struts-default" namespace="/">
+		<action name="userAction_*" class="userAction" method="{1}">
+			<result name="login" >index.jsp</result>
+			<result name="main" type="redirect">main.jsp</result>
+		</action>
+		<action name="customerAction_*" class="customerAction" method="{1}">
+			<result name="saveUI">/jsp/customer/add.jsp</result>
+			<result type="redirectAction">customerAction_findByPage</result>
+			<result name="list">/jsp/customer/list.jsp</result>
+			<result name="update">/jsp/customer/edit.jsp</result>
+		</action>
+		<action name="baseDictAction_*" class="baseDictAction" method="{1}"></action>
+		<action name="linkManAction_*" class="linkManAction" method="{1}">
+			<result name="saveUI">/jsp/linkman/add.jsp</result>
+			<result name="list">/jsp/linkman/list.jsp</result>
+		</action>
+	</package>
+</struts>
